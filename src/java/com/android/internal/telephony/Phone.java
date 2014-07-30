@@ -1699,4 +1699,99 @@ public interface Phone {
      * Remove references to external object stored in this object.
      */
     void removeReferences();
+
+
+	/* add by johnny.gan */
+	void registerForJoinOrExistGroup(Handler h, int what, Object obj);
+	void unregisterForJoinOrExistGroup(Handler h);
+
+	void registerForGroupListUpdate(Handler h, int what, Object obj);
+
+	void unregisterForGroupListUpdate(Handler h);
+
+	void registerForUEStatusChanged(Handler h, int what, Object obj);
+	
+	void unregisterForUEStatusChanged(Handler h);
+
+
+	void registerForCallIndicator(Handler h, int what, Object obj);
+	
+	void unregisterForCallIndicator(Handler h);
+
+	/* indication call */
+	void registerForNotificationCall(Handler h, int what, Object obj);
+	void unregisterForNotificationCall(Handler h);
+	
+	/* call connect  */
+	void registerForCallConnect(Handler h, int what, Object obj);
+	void unregisterForCallConnect(Handler h);
+	
+	/* call hangup  */
+	void registerForCallHangup(Handler h, int what, Object obj);
+	void unregisterForCallHangup(Handler h);
+	
+	/* Out Going Call Progress */
+	void registerForOutGoingCallProgress(Handler h, int what, Object obj);
+	void unregisterForOutGoingCallProgress(Handler h);
+
+	/* Blocked Indicator  */
+	void registerForBlockedIndicator(Handler h, int what, Object obj);
+	void unregisterForBlockedIndicator(Handler h);
+	
+	/* current group active list  */
+	void registerForCurrentGroupActiveList(Handler h, int what, Object obj);
+	void unregisterForCurrentGroupActiveList(Handler h);
+
+	/* device info  */
+	void registerForDeviceInfo(Handler h, int what, Object obj);
+	void unregisterForDeviceInfo(Handler h);
+	
+	/* group owner  */
+	void registerForGroupOwner(Handler h, int what, Object obj);
+	void unregisterForGroupOwner(Handler h);
+	
+	/* trunking mode */
+	void registerForTrunckingMode(Handler h, int what, Object obj);
+	void unregisterForTrunckingMode(Handler h);
+	
+	/* notification join group  */
+	void registerForNotificationJoinGroup(Handler h, int what, Object obj);
+	void unregisterForNotificationJoinGroup(Handler h);
+	
+	/* biz info */
+	void registerForBizInfo(Handler h, int what, Object obj);
+	void unregisterForBizInfo(Handler h);
+	
+	/* network version */
+	void registerForNetworkVersion(Handler h, int what, Object obj);
+	void unregisterForNetworkVersion(Handler h);
+	
+
+	void getIntercomGroupList(String ueName,Message result);
+
+	void joinInGroup(int[] groupInfo, Message result);
+
+	
+	/* exit group */
+	void exitGroup(int[] dataInfo, Message result);
+	
+
+	/* ask for call dial */
+	void callDial(int[] dataInfo, Message result);
+
+	/* hang up dial */
+	void hangupDial(int[] dataInfo, Message result);
+
+	/*  current group scanlist update */
+	void currentGroupScanListUpdate(int[] dataInfo, Message result);
+	
+	
+	/*  query blocked indicator  */
+	void queryBlockedIndicator(int[] dataInfo, Message result);
+	
+	/*  query device info */
+	void deviceInfo(Message result);
+	
+	/*  query biz state */
+	void queryBizState(Message result);
 }

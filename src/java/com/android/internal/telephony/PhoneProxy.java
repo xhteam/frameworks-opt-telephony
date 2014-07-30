@@ -130,6 +130,10 @@ public class PhoneProxy extends Handler implements Phone {
         super.handleMessage(msg);
     }
 
+	private static void initIntercomCallBack(){
+		
+	}
+	
     private static void logd(String msg) {
         Log.d(LOG_TAG, "[PhoneProxy] " + msg);
     }
@@ -959,6 +963,224 @@ public class PhoneProxy extends Handler implements Phone {
     public void requestIsimAuthentication(String nonce, Message response) {
         mActivePhone.requestIsimAuthentication(nonce, response);
     }
+
+	/***********************written by johnny.gan***********************************/
+	public void registerForJoinOrExistGroup(Handler h, int what, Object obj){
+		mCommandsInterface.registerForJoinOrExistGroup(h,what,obj);
+		Log.v("johnny", "in PhoneProxy, call registerForJoinOrExistGroup");
+	}
+	public void unregisterForJoinOrExistGroup(Handler h){
+		mCommandsInterface.unregisterForJoinOrExistGroup(h);
+		Log.v("johnny", "in PhoneProxy, call unregisterForJoinOrExistGroup");
+	}
+
+	public void registerForGroupListUpdate(Handler h, int what, Object obj){
+		mCommandsInterface.registerForGroupListUpdate(h,what,obj);
+		Log.v("johnny", "in PhoneProxy, call registerForGroupListUpdate");
+	}
+
+	public void unregisterForGroupListUpdate(Handler h){
+		mCommandsInterface.unregisterForGroupListUpdate(h);
+		Log.v("johnny", "in PhoneProxy, call unregisterForGroupListUpdate");
+	}
+
+	public void registerForUEStatusChanged(Handler h, int what, Object obj){
+		mCommandsInterface.registerForUEStatusChanged(h,what,obj);
+		Log.v("johnny", "in PhoneProxy, call registerForUEStatusChanged");
+	}
+	
+	public void unregisterForUEStatusChanged(Handler h){
+		mCommandsInterface.unregisterForUEStatusChanged(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForUEStatusChanged");
+	}
+
+
+	public void registerForCallIndicator(Handler h, int what, Object obj){
+		mCommandsInterface.registerForCallIndicator(h,what,obj);
+		Log.v("johnny","in PhoneProxy, call registerForCallIndicator");
+	}
+	
+	public void unregisterForCallIndicator(Handler h){
+		mCommandsInterface.unregisterForCallIndicator(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForCallIndicator");
+	}
+
+	/* indication call */
+	public void registerForNotificationCall(Handler h, int what, Object obj){
+		mCommandsInterface.registerForNotificationCall(h,what,obj);
+		Log.v("johnny","in PhoneProxy, call registerForNotificationCall");
+	}
+	public void unregisterForNotificationCall(Handler h){
+		mCommandsInterface.unregisterForNotificationCall(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForNotificationCall");
+	}
+	
+	/* call connect  */
+	public void registerForCallConnect(Handler h, int what, Object obj){
+		mCommandsInterface.registerForCallConnect(h,what,obj);
+		Log.v("johnny","in PhoneProxy, call registerForCallConnect");
+	}
+	public void unregisterForCallConnect(Handler h){
+		mCommandsInterface.unregisterForCallConnect(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForCallConnect");
+	}
+	
+	/* call hangup  */
+	public void registerForCallHangup(Handler h, int what, Object obj){
+		mCommandsInterface.registerForCallHangup(h,what,obj);
+		Log.v("johnny","in PhoneProxy, call registerForCallHangup");
+	}
+	public void unregisterForCallHangup(Handler h){
+		mCommandsInterface.unregisterForCallHangup(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForCallHangup");
+	}
+	
+	/* Out Going Call Progress */
+	public void registerForOutGoingCallProgress(Handler h, int what, Object obj){
+		mCommandsInterface.registerForOutGoingCallProgress(h,what,obj);
+		Log.v("johnny","in PhoneProxy, call registerForOutGoingCallProgress");
+	}
+	public void unregisterForOutGoingCallProgress(Handler h){
+		mCommandsInterface.unregisterForOutGoingCallProgress(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForOutGoingCallProgress");
+	}
+
+	/* Blocked Indicator  */
+	public void registerForBlockedIndicator(Handler h, int what, Object obj){
+		mCommandsInterface.registerForBlockedIndicator(h,what,obj);
+		Log.v("johnny","in PhoneProxy, call registerForBlockedIndicator");
+	}
+	public void unregisterForBlockedIndicator(Handler h){
+		mCommandsInterface.unregisterForBlockedIndicator(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForBlockedIndicator");
+	}
+	
+	/* current group active list  */
+	public void registerForCurrentGroupActiveList(Handler h, int what, Object obj){
+		mCommandsInterface.registerForCurrentGroupActiveList(h,what,obj);
+		Log.v("johnny","in PhoneProxy, call registerForCurrentGroupActiveList");
+	}
+	public void unregisterForCurrentGroupActiveList(Handler h){
+		mCommandsInterface.unregisterForCurrentGroupActiveList(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForCurrentGroupActiveList");
+	}
+
+	/* device info  */
+	public void registerForDeviceInfo(Handler h, int what, Object obj){
+		mCommandsInterface.registerForDeviceInfo(h,what,obj);
+		Log.v("johnny","in PhoneProxy, call registerForDeviceInfo");
+	}
+	public void unregisterForDeviceInfo(Handler h){
+		mCommandsInterface.unregisterForDeviceInfo(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForDeviceInfo");
+	}
+	
+	/* group owner  */
+	public void registerForGroupOwner(Handler h, int what, Object obj){
+		mCommandsInterface.registerForGroupOwner(h,what,obj);
+		Log.v("johnny","in PhoneProxy, call registerForGroupOwner");
+	}
+	public void unregisterForGroupOwner(Handler h){
+		mCommandsInterface.unregisterForGroupOwner(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForGroupOwner");
+	}
+	
+	/* trunking mode */
+	public void registerForTrunckingMode(Handler h, int what, Object obj){
+		mCommandsInterface.registerForTrunckingMode(h,what,obj);
+		Log.v("johnny","in PhoneProxy, call registerForTrunckingMode");
+	}
+	public void unregisterForTrunckingMode(Handler h){
+		mCommandsInterface.unregisterForTrunckingMode(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForTrunckingMode");
+	}
+	
+	/* notification join group  */
+	public void registerForNotificationJoinGroup(Handler h, int what, Object obj){
+		mCommandsInterface.registerForNotificationJoinGroup(h,what,obj);
+		Log.v("johnny","in PhoneProxy, call registerForNotificationJoinGroup");
+	}
+	public void unregisterForNotificationJoinGroup(Handler h){
+		mCommandsInterface.unregisterForNotificationJoinGroup(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForNotificationJoinGroup");
+	}
+	
+	/* biz info */
+	public void registerForBizInfo(Handler h, int what, Object obj){
+		mCommandsInterface.registerForBizInfo(h,what,obj);
+		Log.v("johnny","in PhoneProxy, call registerForBizInfo");
+	}
+	public void unregisterForBizInfo(Handler h){
+		mCommandsInterface.unregisterForBizInfo(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForBizInfo");
+	}
+	
+	/* network version */
+	public void registerForNetworkVersion(Handler h, int what, Object obj){
+		mCommandsInterface.registerForNetworkVersion(h,what,obj);
+		Log.v("johnny","in PhoneProxy, call registerForNetworkVersion");
+	}
+	public void unregisterForNetworkVersion(Handler h){
+		mCommandsInterface.unregisterForNetworkVersion(h);
+		Log.v("johnny","in PhoneProxy, call unregisterForNetworkVersion");
+	}
+	
+
+	public void getIntercomGroupList(String ueName,Message result){
+		mCommandsInterface.getInterComGroupList(ueName,result);
+		Log.v("johnny", "in PhoneProxy, call getIntercomGroupList");
+	}
+
+	public void joinInGroup(int[] groupInfo, Message result){
+		mCommandsInterface.joinInGroup(groupInfo,result);
+		Log.v("johnny", "in PhoneProxy, call joinInGroup");	
+	}
+
+	
+	/* exit group */
+	public void exitGroup(int[] dataInfo, Message result){
+		mCommandsInterface.exitGroup(dataInfo,result);
+		Log.v("johnny", "in PhoneProxy, call exitGroup");
+	}
+	
+
+	/* ask for call dial */
+	public void callDial(int[] dataInfo, Message result){
+		mCommandsInterface.callDial(dataInfo,result);
+		Log.v("johnny", "in PhoneProxy, call callDial");
+	}
+
+	/* hang up dial */
+	public void hangupDial(int[] dataInfo, Message result){
+		mCommandsInterface.hangupDial(dataInfo,result);
+		Log.v("johnny", "in PhoneProxy, call hangupDial");
+	}
+
+	/*  current group scanlist update */
+	public void currentGroupScanListUpdate(int[] dataInfo, Message result){
+		mCommandsInterface.currentGroupScanListUpdate(dataInfo,result);
+		Log.v("johnny", "in PhoneProxy, call currentGroupScanListUpdate");
+	}
+	
+	
+	/*  query blocked indicator  */
+	public void queryBlockedIndicator(int[] dataInfo, Message result){
+		mCommandsInterface.queryBlockedIndicator(dataInfo,result);
+		Log.v("johnny", "in PhoneProxy, call queryBlockedIndicator");
+	}
+	
+	/*  query device info */
+	public void deviceInfo(Message result){
+		mCommandsInterface.deviceInfo(result);
+		Log.v("johnny", "in PhoneProxy, call deviceInfo");
+	}
+	
+	/*  query biz state */
+	public void queryBizState(Message result){
+		mCommandsInterface.queryBizState(result);
+		Log.v("johnny", "in PhoneProxy, call queryBizState");
+	}
+	/****************************************************************************/
 
     /**
      * {@inheritDoc}

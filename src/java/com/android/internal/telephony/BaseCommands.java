@@ -30,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import android.os.Message;
 
 /**
  * {@hide}
@@ -71,6 +72,26 @@ public abstract class BaseCommands implements CommandsInterface {
     protected RegistrantList mExitEmergencyCallbackModeRegistrants = new RegistrantList();
     protected RegistrantList mRilConnectedRegistrants = new RegistrantList();
     protected RegistrantList mIccRefreshRegistrants = new RegistrantList();
+
+	/* written by johnny.gan  */
+	protected RegistrantList mGroupListUpdateRegistrants = new RegistrantList();
+	protected RegistrantList mJoinOrRemoveRegistrants = new RegistrantList();
+	protected RegistrantList mUEStatusChangedRegistrants = new RegistrantList();
+	protected RegistrantList mCallIndicatorRegistrants = new RegistrantList();
+
+	protected RegistrantList mNotificationCallRegistrants = new RegistrantList();
+	protected RegistrantList mCallConnectRegistrants = new RegistrantList();
+	protected RegistrantList mCallHangupRegistrants = new RegistrantList();
+	protected RegistrantList mOutGoingCallProgressRegistrants = new RegistrantList();
+	protected RegistrantList mBlockedIndicatorRegistrants = new RegistrantList();	
+	protected RegistrantList mCurrentGroupActiveListRegistrants = new RegistrantList();
+	protected RegistrantList mDeviceInfoRegistrants = new RegistrantList();
+	protected RegistrantList mGroupOwnerRegistrants = new RegistrantList();
+	protected RegistrantList mTrunckingModeRegistrants = new RegistrantList();
+	protected RegistrantList mNotificationJoinGroupRegistrants = new RegistrantList();
+	protected RegistrantList mBizInfoRegistrants = new RegistrantList();
+	protected RegistrantList mNetworkVersionRegistrants = new RegistrantList();	
+
 
     protected Registrant mGsmSmsRegistrant;
     protected Registrant mCdmaSmsRegistrant;
@@ -372,6 +393,236 @@ public abstract class BaseCommands implements CommandsInterface {
     public void unregisterForIccRefresh(Handler h) {
         mIccRefreshRegistrants.remove(h);
     }
+	
+	/*************************written by johnny.gan*************************/
+	public void registerForGroupListUpdate(Handler h, int what, Object obj){
+		Registrant r = new Registrant (h, what, obj);
+		mGroupListUpdateRegistrants.add(r);
+		Log.v("johnny","in basecommands, call registerForGroupListUpdate");
+	}
+
+	public void unregisterForGroupListUpdate(Handler h) {
+		mGroupListUpdateRegistrants.remove(h);
+		Log.v("johnny","in basecommands, call unregisterForGroupListUpdate");
+	}
+	
+
+	public void registerForJoinOrExistGroup(Handler h, int what, Object obj){
+		Registrant r = new Registrant (h, what, obj);
+		mJoinOrRemoveRegistrants .add(r);
+		Log.v("johnny","in basecommands, call registerForJoinOrExistGroup");
+	}
+
+	public void unregisterForJoinOrExistGroup(Handler h) {
+		mJoinOrRemoveRegistrants.remove(h);
+		Log.v("johnny","in basecommands, call unregisterForJoinOrExistGroup");
+	}
+
+	
+	public void registerForUEStatusChanged(Handler h, int what, Object obj){
+		Registrant r = new Registrant(h,what,obj);
+		mUEStatusChangedRegistrants.add(r);
+		Log.v("johnny", "in basecommands, call registerForUEStatusChanged");
+	}
+	
+	public void unregisterForUEStatusChanged(Handler h){
+		mUEStatusChangedRegistrants.remove(h);
+		Log.v("johnny","in basecommands, call unregisterForUEStatusChanged");
+	}
+
+
+	public void registerForCallIndicator(Handler h, int what, Object obj){
+		Log.v("johnny","in basecommands, call registerForCallIndicator");
+		Registrant r = new Registrant(h,what,obj);
+		mCallIndicatorRegistrants.add(r);		
+	}
+	public void unregisterForCallIndicator(Handler h){
+		Log.v("johnny","in basecommands, call unregisterForCallIndicator");
+		mCallIndicatorRegistrants.remove(h);
+	}
+
+	
+	/* indication call */
+	public void registerForNotificationCall(Handler h, int what, Object obj){
+		Log.v("johnny","in basecommands, call registerForNotificationCall");
+		Registrant r = new Registrant(h,what,obj);
+		mNotificationCallRegistrants.add(r);		
+	}
+	public void unregisterForNotificationCall(Handler h){
+		Log.v("johnny","in basecommands, call unregisterForNotificationCall");
+		mNotificationCallRegistrants.remove(h);
+	}
+	
+	/* call connect  */
+	public void registerForCallConnect(Handler h, int what, Object obj){
+		Log.v("johnny","in basecommands, call registerForCallConnect");
+		Registrant r = new Registrant(h,what,obj);
+		mCallConnectRegistrants.add(r);		
+	}
+	public void unregisterForCallConnect(Handler h){
+		Log.v("johnny","in basecommands, call unregisterForCallConnect");
+		mCallConnectRegistrants.remove(h);
+	}
+	
+	/* call hangup  */
+	public void registerForCallHangup(Handler h, int what, Object obj){
+		Log.v("johnny","in basecommands, call registerForCallHangup");
+		Registrant r = new Registrant(h,what,obj);
+		mCallHangupRegistrants.add(r);		
+	}
+	public void unregisterForCallHangup(Handler h){
+		Log.v("johnny","in basecommands, call unregisterForCallHangup");
+		mCallHangupRegistrants.remove(h);
+	}
+	
+	/* Out Going Call Progress */
+	public void registerForOutGoingCallProgress(Handler h, int what, Object obj){
+		Log.v("johnny","in basecommands, call registerForOutGoingCallProgress");
+		Registrant r = new Registrant(h,what,obj);
+		mOutGoingCallProgressRegistrants.add(r);		
+	}
+	public void unregisterForOutGoingCallProgress(Handler h){
+		Log.v("johnny","in basecommands, call unregisterForOutGoingCallProgress");
+		mOutGoingCallProgressRegistrants.remove(h);
+	}
+
+	/* Blocked Indicator  */
+	public void registerForBlockedIndicator(Handler h, int what, Object obj){
+		Log.v("johnny","in basecommands, call registerForBlockedIndicator");
+		Registrant r = new Registrant(h,what,obj);
+		mBlockedIndicatorRegistrants.add(r);		
+	}
+	public void unregisterForBlockedIndicator(Handler h){
+		Log.v("johnny","in basecommands, call unregisterForBlockedIndicator");
+		mBlockedIndicatorRegistrants.remove(h);
+	}
+	
+	/* current group active list  */
+	public void registerForCurrentGroupActiveList(Handler h, int what, Object obj){
+		Log.v("johnny","in basecommands, call registerForCurrentGroupActiveList");
+		Registrant r = new Registrant(h,what,obj);
+		mCurrentGroupActiveListRegistrants.add(r);		
+	}
+	public void unregisterForCurrentGroupActiveList(Handler h){
+		Log.v("johnny","in basecommands, call unregisterForCurrentGroupActiveList");
+		mCurrentGroupActiveListRegistrants.remove(h);
+	}
+
+	/* device info  */
+	public void registerForDeviceInfo(Handler h, int what, Object obj){
+		Log.v("johnny","in basecommands, call registerForDeviceInfo");
+		Registrant r = new Registrant(h,what,obj);
+		mDeviceInfoRegistrants.add(r);		
+	}
+	public void unregisterForDeviceInfo(Handler h){
+		Log.v("johnny","in basecommands, call unregisterForDeviceInfo");
+		mDeviceInfoRegistrants.remove(h);
+	}
+	
+	/* group owner  */
+	public void registerForGroupOwner(Handler h, int what, Object obj){
+		Log.v("johnny","in basecommands, call registerForGroupOwner");
+		Registrant r = new Registrant(h,what,obj);
+		mGroupOwnerRegistrants.add(r);		
+	}
+	public void unregisterForGroupOwner(Handler h){
+		Log.v("johnny","in basecommands, call unregisterForGroupOwner");
+		mGroupOwnerRegistrants.remove(h);
+	}
+	
+	/* trunking mode */
+	public void registerForTrunckingMode(Handler h, int what, Object obj){
+		Log.v("johnny","in basecommands, call registerForTrunckingMode");
+		Registrant r = new Registrant(h,what,obj);
+		mTrunckingModeRegistrants.add(r);		
+	}
+	public void unregisterForTrunckingMode(Handler h){
+		Log.v("johnny","in basecommands, call unregisterForTrunckingMode");
+		mTrunckingModeRegistrants.remove(h);
+	}
+	
+	/* notification join group  */
+	public void registerForNotificationJoinGroup(Handler h, int what, Object obj){
+		Log.v("johnny","in basecommands, call registerForNotificationJoinGroup");
+		Registrant r = new Registrant(h,what,obj);
+		mNotificationJoinGroupRegistrants.add(r);		
+	}
+	public void unregisterForNotificationJoinGroup(Handler h){
+		Log.v("johnny","in basecommands, call unregisterForNotificationJoinGroup");
+		mNotificationJoinGroupRegistrants.remove(h);
+	}
+	
+	/* biz info */
+	public void registerForBizInfo(Handler h, int what, Object obj){
+		Log.v("johnny","in basecommands, call registerForBizInfo");
+		Registrant r = new Registrant(h,what,obj);
+		mBizInfoRegistrants.add(r);		
+	}
+	public void unregisterForBizInfo(Handler h){
+		Log.v("johnny","in basecommands, call unregisterForBizInfo");
+		mBizInfoRegistrants.remove(h);
+	}
+	
+	/* network version */
+	public void registerForNetworkVersion(Handler h, int what, Object obj){
+		Log.v("johnny","in basecommands, call registerForNetworkVersion");
+		Registrant r = new Registrant(h,what,obj);
+		mNetworkVersionRegistrants.add(r);		
+	}
+	public void unregisterForNetworkVersion(Handler h){
+		Log.v("johnny","in basecommands, call unregisterForNetworkVersion");
+		mNetworkVersionRegistrants.remove(h);
+	}
+
+	
+	public void getInterComGroupList(String ueName, Message result){
+		Log.v("johnny","in basecommands, call getInterComGroupList");
+	}
+
+	public void joinInGroup(int[] groupInfo, Message result){
+		Log.v("johnny", "in basecommands, call joinInGroup");
+	}
+	
+	/* exit group */
+	public void exitGroup(int[] dataInfo, Message result){
+		Log.v("johnny", "in basecommands, call exitGroup");
+	}
+	
+
+	/* ask for call dial */
+	public void callDial(int[] dataInfo, Message result){
+		Log.v("johnny", "in basecommands, call callDial");
+	}
+
+	/* hang up dial */
+	public void hangupDial(int[] dataInfo, Message result){
+		Log.v("johnny", "in basecommands, call hangupDial");
+	}
+
+	/*  current group scanlist update */
+	public void currentGroupScanListUpdate(int[] dataInfo, Message result){
+		Log.v("johnny", "in basecommands, call currentGroupScanListUpdate");
+	}
+	
+	
+	/*  query blocked indicator  */
+	public void queryBlockedIndicator(int[] dataInfo, Message result){
+		Log.v("johnny", "in basecommands, call queryBlockedIndicator");
+	}
+	
+	/*  query device info */
+	public void deviceInfo(Message result){
+		Log.v("johnny", "in basecommands, call deviceInfo");
+	}
+	
+	/*  query biz state */
+	public void queryBizState(Message result){
+		Log.v("johnny", "in basecommands, call queryBizState");
+	}
+	
+	
+	/*****************************************************************/
+	
     public void unsetOnIccRefresh(Handler h) {
         unregisterForIccRefresh(h);
     }

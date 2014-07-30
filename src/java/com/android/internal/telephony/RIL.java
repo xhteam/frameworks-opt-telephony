@@ -343,7 +343,7 @@ public final class RIL extends BaseCommands implements CommandsInterface {
                         dataLength[2] = (byte)((data.length >> 8) & 0xff);
                         dataLength[3] = (byte)((data.length) & 0xff);
 
-                        //Log.v(LOG_TAG, "writing packet: " + data.length + " bytes");
+                        Log.v(LOG_TAG, "writing packet: " + data.length + " bytes");
 
                         s.getOutputStream().write(dataLength);
                         s.getOutputStream().write(data);
@@ -2203,6 +2203,7 @@ public final class RIL extends BaseCommands implements CommandsInterface {
 
         Object ret = null;
 
+		Log.v(LOG_TAG, "processSolicited response type: "+ rr.mRequest);
         if (error == 0 || p.dataAvail() > 0) {
             // either command succeeds or command fails but with data payload
             try {switch (rr.mRequest) {
@@ -2328,6 +2329,18 @@ public final class RIL extends BaseCommands implements CommandsInterface {
             case RIL_REQUEST_ACKNOWLEDGE_INCOMING_GSM_SMS_WITH_PDU: ret = responseVoid(p); break;
             case RIL_REQUEST_STK_SEND_ENVELOPE_WITH_STATUS: ret = responseICC_IO(p); break;
             case RIL_REQUEST_VOICE_RADIO_TECH: ret = responseInts(p); break;
+
+			/**********written by johnny.gan**********************/
+			case RIL_REQUEST_PTT_QUERY_AVAILABLE_GROUPS: ret = responseGroupList(p);break;
+			case RIL_REQUEST_PTT_GROUP_SETUP: ret = responseInts(p);break;
+			case RIL_REQUEST_PTT_GROUP_RELEASE:ret = responseInts(p);break;
+			case RIL_REQUEST_PTT_CALL_DIAL: ret = responseVoid(p);break;
+			case RIL_REQUEST_PTT_CALL_HANGUP: ret = responseVoid(p);break;
+			case RIL_REQUEST_PTT_CURRENT_GROUP_SCANLIST_UPDATE: ret = responseVoid(p);break;
+			case RIL_REQUEST_PTT_QUERY_BLOCKED_INDICATOR: ret = responseInts(p);break;			
+			case RIL_REQUEST_PTT_DEVICE_INFO: ret = responseInts(p);break;			
+			case RIL_REQUEST_PTT_QUERY_BIZ_STATE: ret = responsePttBizState(p);break;
+			
             default:
                 throw new RuntimeException("Unrecognized solicited response: " + rr.mRequest);
             //break;
@@ -2467,6 +2480,8 @@ public final class RIL extends BaseCommands implements CommandsInterface {
 
         response = p.readInt();
 
+		Log.v(LOG_TAG, "processUnsolicited response type: "+ response);
+
         try {switch(response) {
 /*
  cat libs/telephony/ril_unsol_commands.h \
@@ -2510,6 +2525,24 @@ public final class RIL extends BaseCommands implements CommandsInterface {
             case RIL_UNSOL_RIL_CONNECTED: ret = responseInts(p); break;
             case RIL_UNSOL_VOICE_RADIO_TECH_CHANGED: ret =  responseInts(p); break;
 
+			//written by johnny.gan
+			case RIL_UNSOL_PTT_AVAILABLE_GROUP_CHANGED: ret = responseGroupList(p); break;
+			case RIL_UNSOL_PTT_NOTIFICATION_DIAL: ret = responseStrings(p);break;
+			case RIL_UNSOL_PTT_CALL_INDICATOR: ret = responseInts(p);break;
+			case RIL_UNSOL_PTT_GROUP_RELEASE: ret =	responseInts(p);break;
+			case RIL_UNSOL_PTT_NOTIFICATION_CALL: ret = responseInts(p);break;
+			case RIL_UNSOL_PTT_CALL_CONNECT: ret = responseInts(p);break;
+			case RIL_UNSOL_PTT_CALL_HANGUP: ret = responseInts(p);break;
+			case RIL_UNSOL_PTT_OUTGOING_CALL_PROGRESS: ret = responseInts(p);break;
+			case RIL_UNSOL_PTT_BLOCKED_INDICATOR: ret = responseInts(p);break;
+			case RIL_UNSOL_PTT_CURRENT_GROUP_ACTIVE_LIST: ret = responseInts(p);break;
+			case RIL_UNSOL_PTT_DEVICE_INFO: ret = responseInts(p);break;
+			case RIL_UNSOL_PTT_GROUP_OWNER: ret = responseInts(p);break;
+			case RIL_UNSOL_PTT_TRUNKING_MODE: ret = responseInts(p);break;
+			case RIL_UNSOL_PTT_NOTIFICATION_JOIN_GROUP: ret = responseInts(p);break;
+			case RIL_UNSOL_PTT_BIZ_INFO: ret = responseRaw(p);break;
+			case RIL_UNSOL_PTT_NETWORK_VERSION: ret = responseInts(p);break;
+			
             default:
                 throw new RuntimeException("Unrecognized unsol response: " + response);
             //break; (implied)
@@ -2519,6 +2552,7 @@ public final class RIL extends BaseCommands implements CommandsInterface {
             return;
         }
 
+		
         switch(response) {
             case RIL_UNSOL_RESPONSE_RADIO_STATE_CHANGED:
                 /* has bonus radio state int */
@@ -2866,6 +2900,94 @@ public final class RIL extends BaseCommands implements CommandsInterface {
                 notifyRegistrantsRilConnectionChanged(((int[])ret)[0]);
                 break;
             }
+
+			//written by johnny.gan
+			case RIL_UNSOL_PTT_AVAILABLE_GROUP_CHANGED:
+				if( null != mGroupListUpdateRegistrants){
+					mGroupListUpdateRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}
+				break;
+			case RIL_UNSOL_PTT_NOTIFICATION_DIAL:
+				if( null != mUEStatusChangedRegistrants){
+					mUEStatusChangedRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}
+				break;
+			case RIL_UNSOL_PTT_CALL_INDICATOR:
+				if( null != mCallIndicatorRegistrants){
+					mCallIndicatorRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}	
+				break;
+      case RIL_UNSOL_PTT_GROUP_RELEASE:
+				if( null != mJoinOrRemoveRegistrants){
+				  mJoinOrRemoveRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}
+				break;
+
+			case RIL_UNSOL_PTT_NOTIFICATION_CALL:
+				if( null != mNotificationCallRegistrants){
+					mNotificationCallRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}	
+				break;
+			case RIL_UNSOL_PTT_CALL_CONNECT:
+				if( null != mCallConnectRegistrants){
+					mCallConnectRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}	
+				break;			
+			case RIL_UNSOL_PTT_CALL_HANGUP:
+				if( null != mCallHangupRegistrants){
+					mCallHangupRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}	
+				break;
+			case RIL_UNSOL_PTT_OUTGOING_CALL_PROGRESS:
+				if( null != mOutGoingCallProgressRegistrants){
+					mOutGoingCallProgressRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}	
+				break;
+			case RIL_UNSOL_PTT_BLOCKED_INDICATOR:
+				if( null != mBlockedIndicatorRegistrants){
+					mBlockedIndicatorRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}	
+				break;
+			case RIL_UNSOL_PTT_CURRENT_GROUP_ACTIVE_LIST:
+				if( null != mCurrentGroupActiveListRegistrants){
+					mCurrentGroupActiveListRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}	
+				break;	
+			case RIL_UNSOL_PTT_DEVICE_INFO:
+				if( null != mDeviceInfoRegistrants){
+					mDeviceInfoRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}	
+				break;
+			case RIL_UNSOL_PTT_GROUP_OWNER:
+				if( null != mGroupOwnerRegistrants){
+					mGroupOwnerRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}	
+				break;
+			case RIL_UNSOL_PTT_TRUNKING_MODE:
+				if( null != mTrunckingModeRegistrants){
+					mTrunckingModeRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}	
+				break;
+			case RIL_UNSOL_PTT_NOTIFICATION_JOIN_GROUP:
+				if( null != mNotificationJoinGroupRegistrants){
+					mNotificationJoinGroupRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}	
+				break;
+				
+			
+			case RIL_UNSOL_PTT_BIZ_INFO:
+				if( null != mBizInfoRegistrants){
+					mBizInfoRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}	
+				break;
+			case RIL_UNSOL_PTT_NETWORK_VERSION:
+				if( null != mNetworkVersionRegistrants){
+					mNetworkVersionRegistrants.notifyRegistrants(new AsyncResult(null, ret, null));
+				}	
+				break;
+
+			
+			
         }
     }
 
@@ -3437,6 +3559,37 @@ public final class RIL extends BaseCommands implements CommandsInterface {
         return response;
     }
 
+	//added by johnny.gan
+	private Object responseGroupList(Parcel p){
+		PttGroup pttGroup = new PttGroup();
+		
+		pttGroup.groups_number = p.readInt();
+		pttGroup.dyn_groups_number = p.readInt();
+		int allGroupsNumber = pttGroup.groups_number + pttGroup.dyn_groups_number;
+		pttGroup.tun = p.readString();
+		for(int index=0;index<allGroupsNumber;index++){
+			GroupInfo groupInfo = new GroupInfo();
+			groupInfo.gid = p.readInt();
+			groupInfo.gpriority = p.readInt();
+			groupInfo.gstate = p.readInt();
+			groupInfo.gname = p.readString();
+			pttGroup.addGroupInfo(groupInfo);
+		}
+		
+		return pttGroup;
+	}
+	
+
+	private Object responsePttBizState(Parcel p){		
+		PttInfo pttInfo = new PttInfo();	
+		pttInfo.pttstate = p.readInt();
+		pttInfo.givalid = p.readInt();
+		pttInfo.readGroupInfo(p);
+		pttInfo.civalid = p.readInt();
+		pttInfo.readPersonCallInfo(p);
+		return 	pttInfo;
+	}
+
     private void
     notifyRegistrantsCdmaInfoRec(CdmaInformationRecords infoRec) {
         int response = RIL_UNSOL_CDMA_INFO_REC;
@@ -3601,7 +3754,19 @@ public final class RIL extends BaseCommands implements CommandsInterface {
             case RIL_REQUEST_ACKNOWLEDGE_INCOMING_GSM_SMS_WITH_PDU: return "RIL_REQUEST_ACKNOWLEDGE_INCOMING_GSM_SMS_WITH_PDU";
             case RIL_REQUEST_STK_SEND_ENVELOPE_WITH_STATUS: return "RIL_REQUEST_STK_SEND_ENVELOPE_WITH_STATUS";
             case RIL_REQUEST_VOICE_RADIO_TECH: return "RIL_REQUEST_VOICE_RADIO_TECH";
-            default: return "<unknown request>";
+
+			/***********written by johnny.gan**************************/
+			case RIL_REQUEST_PTT_QUERY_AVAILABLE_GROUPS: return "RIL_REQUEST_PTT_QUERY_AVAILABLE_GROUPS";
+			case RIL_REQUEST_PTT_GROUP_SETUP: return "RIL_REQUEST_PTT_GROUP_SETUP";
+			case RIL_REQUEST_PTT_GROUP_RELEASE: return "RIL_REQUEST_PTT_GROUP_RELEASE";
+			case RIL_REQUEST_PTT_CALL_DIAL: return "RIL_REQUEST_PTT_CALL_DIAL";
+			case RIL_REQUEST_PTT_CALL_HANGUP: return "RIL_REQUEST_PTT_CALL_HANGUP";
+			case RIL_REQUEST_PTT_CURRENT_GROUP_SCANLIST_UPDATE: return "RIL_REQUEST_PTT_CURRENT_GROUP_SCANLIST_UPDATE";
+			case RIL_REQUEST_PTT_QUERY_BLOCKED_INDICATOR: return "RIL_REQUEST_PTT_QUERY_BLOCKED_INDICATOR";
+			case RIL_REQUEST_PTT_DEVICE_INFO: return "RIL_REQUEST_PTT_DEVICE_INFO";
+			case RIL_REQUEST_PTT_QUERY_BIZ_STATE: return "RIL_REQUEST_PTT_QUERY_BIZ_STATE";
+			
+			default: return "<unknown request>";
         }
     }
 
@@ -3650,6 +3815,25 @@ public final class RIL extends BaseCommands implements CommandsInterface {
             case RIL_UNSOL_EXIT_EMERGENCY_CALLBACK_MODE: return "UNSOL_EXIT_EMERGENCY_CALLBACK_MODE";
             case RIL_UNSOL_RIL_CONNECTED: return "UNSOL_RIL_CONNECTED";
             case RIL_UNSOL_VOICE_RADIO_TECH_CHANGED: return "UNSOL_VOICE_RADIO_TECH_CHANGED";
+
+			//written by johnny.gan
+			case RIL_UNSOL_PTT_AVAILABLE_GROUP_CHANGED: return "RIL_UNSOL_PTT_AVAILABLE_GROUP_CHANGED";
+			case RIL_UNSOL_PTT_NOTIFICATION_DIAL: return "RIL_UNSOL_PTT_NOTIFICATION_DIAL";
+			case RIL_UNSOL_PTT_CALL_INDICATOR: return "RIL_UNSOL_PTT_CALL_INDICATOR";
+		  case RIL_UNSOL_PTT_GROUP_RELEASE: return "RIL_UNSOL_PTT_GROUP_RELEASE";
+			case RIL_UNSOL_PTT_NOTIFICATION_CALL: return "RIL_UNSOL_PTT_NOTIFICATION_CALL";
+			case RIL_UNSOL_PTT_CALL_CONNECT: return "RIL_UNSOL_PTT_CALL_CONNECT";
+			case RIL_UNSOL_PTT_CALL_HANGUP: return "RIL_UNSOL_PTT_CALL_HANGUP";
+			case RIL_UNSOL_PTT_OUTGOING_CALL_PROGRESS: return "RIL_UNSOL_PTT_OUTGOING_CALL_PROGRESS";
+			case RIL_UNSOL_PTT_BLOCKED_INDICATOR: return "RIL_UNSOL_PTT_BLOCKED_INDICATOR";
+			case RIL_UNSOL_PTT_CURRENT_GROUP_ACTIVE_LIST: return "RIL_UNSOL_PTT_CURRENT_GROUP_ACTIVE_LIST";
+			case RIL_UNSOL_PTT_DEVICE_INFO: return "RIL_UNSOL_PTT_DEVICE_INFO";
+			case RIL_UNSOL_PTT_GROUP_OWNER: return "RIL_UNSOL_PTT_GROUP_OWNER";
+			case RIL_UNSOL_PTT_TRUNKING_MODE: return "RIL_UNSOL_PTT_TRUNKING_MODE";
+			case RIL_UNSOL_PTT_NOTIFICATION_JOIN_GROUP: return "RIL_UNSOL_PTT_NOTIFICATION_JOIN_GROUP";
+			case RIL_UNSOL_PTT_BIZ_INFO: return "RIL_UNSOL_PTT_BIZ_INFO";
+			case RIL_UNSOL_PTT_NETWORK_VERSION: return "RIL_UNSOL_PTT_NETWORK_VERSION";
+			
             default: return "<unknown reponse>";
         }
     }
@@ -3886,4 +4070,75 @@ public final class RIL extends BaseCommands implements CommandsInterface {
         pw.println(" mLastNITZTimeInfo=" + mLastNITZTimeInfo);
         pw.println(" mTestingEmergencyCall=" + mTestingEmergencyCall.get());
     }
+
+	public void getInterComGroupList(String ueName, Message result){
+		RILRequest rr = RILRequest.obtain(RIL_REQUEST_PTT_QUERY_AVAILABLE_GROUPS, result);
+        send(rr);
+		Log.v("johnny","in ril, call getInterComGroupList");
+	}
+
+	/* join group */
+	public void joinInGroup(int[] groupInfo, Message result){
+		Log.v("johnny", "in ril, call joinInGroup");
+		RILRequest rr = RILRequest.obtain(RIL_REQUEST_PTT_GROUP_SETUP, result);
+		rr.mp.writeIntArray(groupInfo);
+        send(rr);
+	}	
+	
+	/* exit group */
+	public void exitGroup(int[] dataInfo, Message result){
+		Log.v("johnny", "in ril, call exitGroup");
+		RILRequest rr = RILRequest.obtain(RIL_REQUEST_PTT_GROUP_RELEASE, result);
+		rr.mp.writeIntArray(dataInfo);
+        send(rr);
+	}
+	
+
+	/* ask for call dial */
+	public void callDial(int[] dataInfo, Message result){
+		Log.v("johnny", "in ril, call callDial");
+		RILRequest rr = RILRequest.obtain(RIL_REQUEST_PTT_CALL_DIAL, result);
+		rr.mp.writeIntArray(dataInfo);
+        send(rr);
+	}
+
+	/* hang up dial */
+	public void hangupDial(int[] dataInfo, Message result){
+		Log.v("johnny", "in ril, call hangupDial");
+		RILRequest rr = RILRequest.obtain(RIL_REQUEST_PTT_CALL_HANGUP, result);
+		rr.mp.writeIntArray(dataInfo);
+        send(rr);
+	}
+
+	/*  current group scanlist update */
+	public void currentGroupScanListUpdate(int[] dataInfo, Message result){
+		RILRequest rr = RILRequest.obtain(RIL_REQUEST_PTT_CURRENT_GROUP_SCANLIST_UPDATE, result);
+		rr.mp.writeIntArray(dataInfo);
+        send(rr);
+		Log.v("johnny", "in ril, call currentGroupScanListUpdate");
+	}
+	
+	
+	/*  query blocked indicator  */
+	public void queryBlockedIndicator(int[] dataInfo, Message result){
+		RILRequest rr = RILRequest.obtain(RIL_REQUEST_PTT_QUERY_BLOCKED_INDICATOR, result);
+		rr.mp.writeIntArray(dataInfo);
+        send(rr);
+		Log.v("johnny", "in ril, call queryBlockedIndicator");
+	}
+	
+	/*  query device info */
+	public void deviceInfo( Message result){
+		RILRequest rr = RILRequest.obtain(RIL_REQUEST_PTT_DEVICE_INFO, result);
+        send(rr);
+		Log.v("johnny", "in ril, call deviceInfo");
+	}
+	
+	/*  query biz state */
+	public void queryBizState( Message result){
+		RILRequest rr = RILRequest.obtain(RIL_REQUEST_PTT_QUERY_BIZ_STATE, result);
+        send(rr);
+		Log.v("johnny", "in ril, call queryBizState");
+	}
+		
 }

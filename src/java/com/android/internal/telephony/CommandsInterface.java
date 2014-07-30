@@ -1576,4 +1576,110 @@ public interface CommandsInterface {
      * Notifiy that we are testing an emergency call
      */
     public void testingEmergencyCall();
+
+	
+	
+    /**
+     * writen by johnny.gan
+     * update group list
+     * point to RIL_UNSOL_PTT_QUERY_AVAILABLE_GROUP
+     */
+    public void registerForGroupListUpdate(Handler h, int what, Object obj);
+    public void unregisterForGroupListUpdate(Handler h);
+
+	
+    /**
+     * writen by johnny.gan
+     * join or exit group
+     */
+    public void registerForJoinOrExistGroup(Handler h, int what, Object obj);
+    public void unregisterForJoinOrExistGroup(Handler h);
+
+	/****
+	*  update ue status 
+	* point to RIL_UNSOL_PTT_NOTIFICATION_DIAL
+	*/
+	public void registerForUEStatusChanged(Handler h, int what, Object obj);
+	public void unregisterForUEStatusChanged(Handler h);
+
+
+	/* call indicator */
+	public void registerForCallIndicator(Handler h, int what, Object obj);
+	public void unregisterForCallIndicator(Handler h);
+	
+	/* indication call */
+	public void registerForNotificationCall(Handler h, int what, Object obj);
+	public void unregisterForNotificationCall(Handler h);
+	
+	/* call connect  */
+	public void registerForCallConnect(Handler h, int what, Object obj);
+	public void unregisterForCallConnect(Handler h);
+	
+	/* call hangup  */
+	public void registerForCallHangup(Handler h, int what, Object obj);
+	public void unregisterForCallHangup(Handler h);
+	
+	/* Out Going Call Progress */
+	public void registerForOutGoingCallProgress(Handler h, int what, Object obj);
+	public void unregisterForOutGoingCallProgress(Handler h);
+
+	/* Blocked Indicator  */
+	public void registerForBlockedIndicator(Handler h, int what, Object obj);
+	public void unregisterForBlockedIndicator(Handler h);
+	
+	/* current group active list  */
+	public void registerForCurrentGroupActiveList(Handler h, int what, Object obj);
+	public void unregisterForCurrentGroupActiveList(Handler h);
+
+	/* device info  */
+	public void registerForDeviceInfo(Handler h, int what, Object obj);
+	public void unregisterForDeviceInfo(Handler h);
+	
+	/* group owner  */
+	public void registerForGroupOwner(Handler h, int what, Object obj);
+	public void unregisterForGroupOwner(Handler h);
+	
+	/* trunking mode */
+	public void registerForTrunckingMode(Handler h, int what, Object obj);
+	public void unregisterForTrunckingMode(Handler h);
+	
+	/* notification join group  */
+	public void registerForNotificationJoinGroup(Handler h, int what, Object obj);
+	public void unregisterForNotificationJoinGroup(Handler h);
+	
+	/* biz info */
+	public void registerForBizInfo(Handler h, int what, Object obj);
+	public void unregisterForBizInfo(Handler h);
+	
+	/* network version */
+	public void registerForNetworkVersion(Handler h, int what, Object obj);
+	public void unregisterForNetworkVersion(Handler h);
+
+
+
+	/* 查询群组列表  */
+	public void getInterComGroupList(String ueName, Message result);
+
+	/*  Join to group  */
+	public void joinInGroup(int[] groupInfo, Message result);
+	/* exit group */
+	public void exitGroup(int[] dataInfo, Message result);
+
+	
+	/* ask for call dial */
+	public void callDial(int[] dataInfo, Message result);
+	/* hang up dial */
+	public void hangupDial(int[] dataInfo, Message result);
+
+	/*  current group scanlist update */
+	public void currentGroupScanListUpdate(int[] dataInfo, Message result);
+	/*  query blocked indicator  */
+	public void queryBlockedIndicator(int[] dataInfo, Message result);
+	/*  query device info */
+	public void deviceInfo(Message result);
+	/*  query biz state */
+	public void queryBizState(Message result);
+	
+	
+	
 }
