@@ -3565,6 +3565,8 @@ public final class RIL extends BaseCommands implements CommandsInterface {
 		
 		pttGroup.groups_number = p.readInt();
 		pttGroup.dyn_groups_number = p.readInt();
+		pttGroup.emergType = p.readInt();
+		pttGroup.emergNumber = p.readInt();
 		int allGroupsNumber = pttGroup.groups_number + pttGroup.dyn_groups_number;
 		pttGroup.tun = p.readString();
 		for(int index=0;index<allGroupsNumber;index++){

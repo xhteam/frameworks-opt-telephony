@@ -10,6 +10,8 @@ public class PttGroup {
     static final String LOG_TAG = "RILB";
 	public int groups_number;
 	public int dyn_groups_number;
+	public int emergType;
+	public int emergNumber;
     public String tun;
 	public List<GroupInfo>  ginfoList;
 	
