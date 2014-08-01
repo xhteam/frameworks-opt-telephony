@@ -1310,6 +1310,9 @@ public abstract class PhoneBase extends Handler implements Phone {
 	/*  query biz state */
 	public void queryBizState(Message result){}
 
+	/* hangup point call */
+	public void hangupPointCall(Message result){}
+
     public void dump(FileDescriptor fd, PrintWriter pw, String[] args) {
         pw.println("PhoneBase:");
         pw.println(" mCM=" + mCM);

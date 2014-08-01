@@ -1680,6 +1680,8 @@ public interface CommandsInterface {
 	/*  query biz state */
 	public void queryBizState(Message result);
 	
+	/* hangup point call */
+	public void hangupPointCall(Message result);
 	
 	
 }

@@ -1180,6 +1180,13 @@ public class PhoneProxy extends Handler implements Phone {
 		mCommandsInterface.queryBizState(result);
 		Log.v("johnny", "in PhoneProxy, call queryBizState");
 	}
+	
+	
+	/* hangup point call */
+	public void hangupPointCall(Message result){
+		mCommandsInterface.hangupPointCall(result);
+		Log.v("johnny", "in PhoneProxy, call hangupPointCall");	
+	}
 	/****************************************************************************/
 
     /**

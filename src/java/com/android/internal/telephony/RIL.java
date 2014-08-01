@@ -4142,5 +4142,12 @@ public final class RIL extends BaseCommands implements CommandsInterface {
         send(rr);
 		Log.v("johnny", "in ril, call queryBizState");
 	}
+	
+	public void hangupPointCall(Message result){		
+		RILRequest rr = RILRequest.obtain(RIL_REQUEST_HANGUP_WAITING_OR_BACKGROUND,
+		                                result);
+		if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+		send(rr);
+	}
 		
 }

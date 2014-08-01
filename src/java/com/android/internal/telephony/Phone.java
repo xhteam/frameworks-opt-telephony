@@ -1794,4 +1794,7 @@ public interface Phone {
 	
 	/*  query biz state */
 	void queryBizState(Message result);
+	
+	/* hangup point call */
+	void hangupPointCall(Message result);
 }

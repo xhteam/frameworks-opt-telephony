@@ -620,7 +620,10 @@ public abstract class BaseCommands implements CommandsInterface {
 		Log.v("johnny", "in basecommands, call queryBizState");
 	}
 	
-	
+	/* hangup point call */
+	public void hangupPointCall(Message result){
+		Log.v("johnny", "in basecommands, call hangupPointCall");
+	}
 	/*****************************************************************/
 	
     public void unsetOnIccRefresh(Handler h) {
